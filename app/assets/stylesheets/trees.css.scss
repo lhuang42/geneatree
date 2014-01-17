@@ -1,0 +1,48 @@
+// Place all the styles related to the trees controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+svg {
+  border: 1px solid #999;
+  overflow: hidden;
+}
+
+.name text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+  font-size: 14px;
+}
+
+.node rect {
+  stroke: #999;
+  stroke-width: 1px;
+  fill: #fff;
+}
+
+.edgeLabel rect {
+  fill: #fff;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.marriage {
+	display: none;
+}
+
+.node-footer {
+	font-size:8pt;
+	background-color: #CCC;
+}
+
+svg {
+	border: 0px;
+}
+
+#svgholder {
+	border: 1px solid black;
+	overflow-x: scroll;
+}

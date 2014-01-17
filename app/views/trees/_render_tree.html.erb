@@ -1,0 +1,66 @@
+<script>
+	var g = new dagreD3.Digraph();
+	<% @ind_ordered.each do |i| %>
+		g.addNode("<%= i.id %>", {label: "<div style='padding:10px' class='name'><%= i.name %></div><div style='padding: 5px 0px 10px 0px;min-width:130px;width:100%' class='node-footer' id='<%= i.id %>'><span>&nbsp;</span></div>"});
+		<% if i.spouse.present? %>
+			g.addNode("<%= i.spouse.id %>", {label: "<div style='padding:10px' class='name'><%= i.spouse.name %></div><div style='padding: 5px 0px 10px 0px;min-width:130px;width:100%' class='node-footer' id='<%= i.spouse.id %>'><span>&nbsp;</span></div>" });
+			g.addNode("marriage<%= "#{i.id}-#{i.spouse.id}" %>", {class: "marriage"});		
+		<% elsif i.children.present? %>
+			g.addNode("nonmarriage<%= i.id %>", {class: "marriage"});
+		<% end %>
+	<% end %>
+
+	<% @ind_ordered.each do |i| %>
+		<% if i.spouse.present? %>
+			g.addEdge(null, "<%= i.id %>", "marriage<%= "#{i.id}-#{i.spouse.id}" %>");
+			g.addEdge(null, "<%= i.spouse.id %>", "marriage<%= "#{i.id}-#{i.spouse.id}" %>");
+			<% i.children.each do |c| %>
+				g.addEdge(null, "marriage<%= "#{i.id}-#{i.spouse.id}" %>", "<%= c.id %>");
+			<% end %>
+		<% elsif i.children.present? %>
+			g.addEdge(null, "<%= i.id %>", "nonmarriage<%= i.id %>");
+			<% i.children.each do |c| %>
+				g.addEdge(null, "nonmarriage<%= i.id %>", "<%= c.id %>");
+			<% end %>
+		<% end %>
+	<% end %>
+	var renderer = new dagreD3.Renderer();
+	var oldDrawNodes = renderer.drawNodes();
+
+	renderer.drawNodes(function(graph, svg) {
+	  var svgNodes = oldDrawNodes(graph, svg);
+	  svgNodes.select("rect").attr("class", function(u) { return graph.node(u).class; });
+		return svgNodes;
+	});
+
+	// Overriding the default edge path function to not use arrowheads...
+	renderer.drawEdgePaths(function(g, root) {
+	  var svgEdgePaths = root
+	    .selectAll('g.edgePath')
+	    .classed('enter', false)
+	    .data(g.edges(), function(e) { return e; });
+
+	  svgEdgePaths
+	    .enter()
+	      .append('g')
+	        .attr('class', 'edgePath enter')
+	        .append('path')
+	          .style('opacity', 0)
+
+	  this._transition(svgEdgePaths.exit())
+	      .style('opacity', 0)
+	      .remove();
+
+	  return svgEdgePaths;
+	});
+	renderer.edgeInterpolate("step-after");
+
+	renderer.run(g, d3.select("svg g"));
+	
+	<% @tree.individuals.each do |i| %>
+		
+		var button_group_<%= i.id %> = '<% if i.direct %>Add:<% if (i.parent_a.nil? or i.parent_b.nil?) %><%= link_to('Parent', add_connection_tree_individual_path(:id => i.id, :tree_id => @tree.id, :connection_type => "1"), remote: true, class: "btn btn-mini", 'data-toggle' => "modal", 'data-target' => "#modal-window") %><% end %>\
+		<%= link_to('Child', add_connection_tree_individual_path(:id => i.id, :tree_id => @tree.id, :connection_type => "2"), remote: true, class: "btn btn-mini", 'data-toggle' => "modal", 'data-target' => "#modal-window") %><% end %>';
+		$('#<%= i.id %> span').append(button_group_<%= i.id %>);
+	<% end %>
+</script>

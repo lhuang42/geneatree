@@ -1,0 +1,41 @@
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      <h4 class="modal-title" id="myModalLabel">
+      	<% if @pass[:connection_type] == "1"%>
+					Add parent
+				<% else %>
+					Add child
+				<% end %>
+      </h4>
+    </div>
+    <div class="modal-body">
+			
+			<%= form_for @individual do |f| %>
+				<%= hidden_field_tag :tree_id, @pass[:tree_id] %>
+				<%= hidden_field_tag :connected_id, @pass[:id] %>
+				<%= hidden_field_tag :connection_type, @pass[:connection_type] %>
+
+			  <div class="control-group">
+			    <%= f.label :name, :class => 'control-label' %>
+			    <div class="controls">
+			      <%= f.text_field :name, :class => 'text_field' %>
+			    </div>
+			  </div>
+			  <div class="form-actions">
+			    <%= f.submit nil, :class => 'btn btn-primary' %>
+			  </div>
+			<% end %>
+      
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-primary">Save changes</button>
+    </div>
+  </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
+
+
