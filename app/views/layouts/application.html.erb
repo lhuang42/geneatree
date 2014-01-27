@@ -47,9 +47,14 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </a>
-        <a class="brand" href="#">Geneatree</a>
+		<%= link_to "Geneatree", root_path, class: "brand" %>
         <div class="container nav-collapse">
-			<ul class="nav navbar-nav pull-right">
+			<ul class="nav">
+				<li>
+					<%= link_to "Trees", trees_path %>
+				</li>
+			</ul>
+			<ul class="nav pull-right">
 				<% if user_signed_in? %>
 					<li>
 						<p class="navbar-text">
@@ -72,10 +77,6 @@
             <%= yield %>
           </div>
         </div><!--/row-->
-
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
 
     </div> <!-- /container -->
 

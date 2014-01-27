@@ -1,10 +1,10 @@
 class IndividualsController < ApplicationController
-  
+  before_action :set_individual, only: [:update, :destroy]
+  before_action :set_tree, only: [:create, :update]
   def new
   end
   
   def create
-    @tree = Tree.find(params[:tree_id])
     @individual = @tree.individuals.create(individual_params)
     
     if @tree.individuals.count == 1
@@ -40,14 +40,11 @@ class IndividualsController < ApplicationController
   end
   
   def update
-    @tree = Tree.find(params[:tree_id])
-    set_individual
     @individual.update(individual_params)
     redirect_to tree_path(@tree)
   end
   
   def destroy
-    set_individual
     @individual.destroy
     respond_to do |format|
       format.html { redirect_to tree_path(@tree) }
